@@ -1,0 +1,77 @@
+scalar DateTime
+scalar Float
+
+enum TypeCurrency {
+    RUB
+    USD
+    EUR
+}
+
+enum InvestmentType {
+    INDEX
+    CRYPTO
+    DEPOSIT
+    BONDS
+    STOCK
+}
+
+input CreateInvestmentInput {
+    name: String!
+    amount: Float!
+    price: Float!
+    type: InvestmentType!
+    currency:  TypeCurrency!
+    description: String
+}
+
+input CreateCommentInput {
+    text: String!
+    investmentId: String!
+}
+
+input UpdateInvestmentInput {
+    id: String!
+    name: String
+    amount: Float
+    price: Float
+    currency:  TypeCurrency
+    description: String
+}
+
+type Comment {
+    id: String
+    text: String
+    userId: String
+    investmentId: String
+    investment: Investment
+    author: User
+}
+
+type Investment {
+    id: String
+    userId: String
+    amount: Float
+    price: Float
+    name:  String
+    type: InvestmentType
+    currency:TypeCurrency
+    description: String
+    createAt :   DateTime
+    comments: [Comment]
+    user: User
+}
+
+type Query {
+    test(a: String, b: String): String
+    getInvest(investID: String!): Investment!
+    getInvests(userID: String!): [Investment!]
+    getCommentsByInvest(investID: String): [Comment!]
+}
+
+type Mutation {
+    createInvest(data: CreateInvestmentInput, userId: String): Investment!
+    updateInvest(data: UpdateInvestmentInput): Investment!
+    addCommentToInvest(data: CreateCommentInput): Investment!
+}
+
+

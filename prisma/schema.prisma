@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String         @id @unique @default(uuid())
+  email              String         @unique
+  status             String?
+  isOnline           Boolean        @default(false)
+  isConfirm          Boolean        @default(false)
+  isVerified         Boolean        @default(false)
+  hashedPassword     String
+  hashedRefreshToken String?
+  role               Role[]         @default([USER])
+  username           String         @unique
+  createAt           DateTime       @default(now())
+  updateAt           DateTime       @updatedAt
+  auth               Auth?
+  Comment            Comment[]
+  Investment         Investment?
+  Notification       Notification[]
+  profile            Profile?
+}
+
+model Auth {
+  id           String @id @default(uuid())
+  userId       String @unique
+  accessToken  String
+  refreshToken String
+  user         User   @relation(fields: [userId], references: [id])
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  userId String @unique
+  age    Int
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Investment {
+  id          String         @id @default(uuid())
+  userId      String         @unique
+  amount      Float
+  price       Float
+  name        String
+  type        InvestmentType
+  currency    TypeCurrency
+  description String?
+  createAt    DateTime       @default(now())
+  comments    Comment[]
+  user        User           @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id           String      @id @default(uuid())
+  text         String
+  userId       String?
+  investmentId String?
+  investment   Investment? @relation(fields: [investmentId], references: [id])
+  author       User?       @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  userId      String
+  user        User   @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+  BOT
+}
+
+enum TypeCurrency {
+  RUB
+  USD
+  EUR
+}
+
+enum InvestmentType {
+  INDEX
+  CRYPTO
+  DEPOSIT
+  BONDS
+  STOCK
+}

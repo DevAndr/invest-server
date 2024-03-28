@@ -1,0 +1,12 @@
+server:
+  PORT: 3030
+
+auth:
+  JWT_ACCESS_EXPIRATION_TIME: 10m
+  JWT_REFRESH_EXPIRATION_TIME: 30m
+  JWT_ACCESS_SECRET: at-secret
+  JWT_REFRESH_SECRET: rt-secret
+
+DATABASE:
+  host: localhost
+  port: 5432

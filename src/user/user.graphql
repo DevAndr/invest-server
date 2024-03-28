@@ -1,0 +1,48 @@
+scalar DateTime
+scalar Json
+
+enum Role {
+    USER
+    ADMIN
+    BOT
+}
+
+type User {
+    id: String!
+    email: String!
+    status: String!
+    isOnline: Boolean!
+    isConfirm: Boolean!
+    isVerified: Boolean!
+    role: [Role!]!
+    username: String!
+    #wallet             Wallet?
+}
+
+input UpdateDataUserInput {
+    username: String
+    email: String
+    status: String
+}
+
+input CreateUserInput {
+    username: String!
+    password: String!
+    email: String!
+    status: String!
+}
+
+type Query {
+    users: [User]
+    user(id: String!): User
+    test:   String
+}
+
+type Mutation {
+    createUser(createUserInput: CreateUserInput!): User
+    update(data: UpdateDataUserInput): User
+    updateEmailUser(email: String!): User
+    updateStatusUser(status: String!): User
+    updateUsernameUser(username: String!): User
+    removeUser(id: String!): User
+}
