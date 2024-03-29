@@ -42,6 +42,11 @@ export interface CreateInvestmentInput {
     type: InvestmentType;
 }
 
+export interface CreatePostInput {
+    description: string;
+    title: string;
+}
+
 export interface CreateUserInput {
     email: string;
     password: string;
@@ -58,10 +63,6 @@ export interface SigInInput {
     email: string;
     password: string;
     username: string;
-}
-
-export interface TInput {
-    title?: Nullable<string>;
 }
 
 export interface UpdateDataUserInput {
@@ -111,17 +112,24 @@ export interface Investment {
 export interface IMutation {
     addCommentToInvest(data?: Nullable<CreateCommentInput>): Investment | Promise<Investment>;
     createInvest(data?: Nullable<CreateInvestmentInput>, userId?: Nullable<string>): Investment | Promise<Investment>;
+    createPost(data?: Nullable<CreatePostInput>): Post | Promise<Post>;
     createUser(createUserInput: CreateUserInput): Nullable<User> | Promise<Nullable<User>>;
     logIn(data: LogInInput): Auth | Promise<Auth>;
     refreshTokens(refreshToken: string): Tokens | Promise<Tokens>;
     removeUser(id: string): Nullable<User> | Promise<Nullable<User>>;
     sigIn(data: SigInInput): Auth | Promise<Auth>;
-    test(data: string): string | Promise<string>;
     update(data?: Nullable<UpdateDataUserInput>): Nullable<User> | Promise<Nullable<User>>;
     updateEmailUser(email: string): Nullable<User> | Promise<Nullable<User>>;
     updateInvest(data?: Nullable<UpdateInvestmentInput>): Investment | Promise<Investment>;
     updateStatusUser(status: string): Nullable<User> | Promise<Nullable<User>>;
     updateUsernameUser(username: string): Nullable<User> | Promise<Nullable<User>>;
+}
+
+export interface Post {
+    description: string;
+    id: string;
+    likes: number;
+    title: string;
 }
 
 export interface IQuery {
@@ -130,6 +138,7 @@ export interface IQuery {
     getInvest(investID: string): Investment | Promise<Investment>;
     getInvests(userID: string): Nullable<Investment[]> | Promise<Nullable<Investment[]>>;
     logOut(): Nullable<boolean> | Promise<Nullable<boolean>>;
+    posts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
     test(a?: Nullable<string>, b?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     user(id: string): Nullable<User> | Promise<Nullable<User>>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;

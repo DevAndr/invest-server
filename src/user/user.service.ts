@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SigInInputDto } from 'src/auth/dto/sig-in.input';
-import { UpdateDataUserInput } from '../graphql/graphql';
+import { SigInInput, UpdateDataUserInput } from '../graphql/graphql';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateEmailDto } from './dto/update-user.input';
@@ -30,7 +29,7 @@ export class UserService {
     });
   }
 
-  async checkUser(data: SigInInputDto) {
+  async checkUser(data: SigInInput) {
     const foundUser = await this.prismaService.user.findFirst({
       where: {
         email: data.email,
