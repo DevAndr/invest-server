@@ -63,6 +63,8 @@ model Comment {
   investmentId String?
   investment   Investment? @relation(fields: [investmentId], references: [id])
   author       User?       @relation(fields: [userId], references: [id])
+  Post         Post?       @relation(fields: [postId], references: [id])
+  postId       String?
 }
 
 model Notification {
@@ -71,6 +73,14 @@ model Notification {
   description String
   userId      String
   user        User   @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  likes       Int       @default(0)
+  comments    Comment[]
 }
 
 enum Role {
