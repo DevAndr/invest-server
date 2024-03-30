@@ -1,12 +1,10 @@
 import { AuthGuard } from '@nestjs/passport';
 import { ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
-import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
-export class AtGqlAuthGuard extends AuthGuard('jwt') {
+export class AtCookieAuthGuard extends AuthGuard('jwt'){
   constructor(private reflector: Reflector) {
     super();
   }
@@ -14,20 +12,19 @@ export class AtGqlAuthGuard extends AuthGuard('jwt') {
   getRequest(ctx: ExecutionContext): any {
     if (ctx.getType() === 'http') {
       const request = ctx.switchToHttp().getRequest();
-      console.log('http');
-      return request;
+      return request.cookies?.accessToken;
     } else {
       const ctxGql = GqlExecutionContext.create(ctx);
       const req = ctxGql.getContext().req
-      console.log('AtGqlAuthGuard - cookies', req.cookies)
 
-      return req;
+
+      console.log('AtCookieAuthGuard - cookies', req.cookies);
+
+      return req
     }
   }
 
-  canActivate(
-    ctx: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(ctx: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride('isPublic', [
       ctx.getHandler(),
       ctx.getClass(),

@@ -135,7 +135,7 @@ export interface Post {
 }
 
 export interface IQuery {
-    checkAuth(uid: string): Nullable<boolean> | Promise<Nullable<boolean>>;
+    checkAuth(): Nullable<boolean> | Promise<Nullable<boolean>>;
     getCommentsByInvest(investID?: Nullable<string>): Nullable<Comment[]> | Promise<Nullable<Comment[]>>;
     getInvest(investID: string): Investment | Promise<Investment>;
     getInvests(userID: string): Nullable<Investment[]> | Promise<Nullable<Investment[]>>;
