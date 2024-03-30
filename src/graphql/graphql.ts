@@ -114,10 +114,10 @@ export interface IMutation {
     createInvest(data?: Nullable<CreateInvestmentInput>, userId?: Nullable<string>): Investment | Promise<Investment>;
     createPost(data?: Nullable<CreatePostInput>): Post | Promise<Post>;
     createUser(createUserInput: CreateUserInput): Nullable<User> | Promise<Nullable<User>>;
-    logIn(data: LogInInput): Auth | Promise<Auth>;
-    refreshTokens(refreshToken: string): Tokens | Promise<Tokens>;
+    refreshTokens(): Tokens | Promise<Tokens>;
     removeUser(id: string): Nullable<User> | Promise<Nullable<User>>;
-    sigIn(data: SigInInput): Auth | Promise<Auth>;
+    sigIn(data: LogInInput): Auth | Promise<Auth>;
+    sigUp(data: SigInInput): Auth | Promise<Auth>;
     update(data?: Nullable<UpdateDataUserInput>): Nullable<User> | Promise<Nullable<User>>;
     updateEmailUser(email: string): Nullable<User> | Promise<Nullable<User>>;
     updateInvest(data?: Nullable<UpdateInvestmentInput>): Investment | Promise<Investment>;
@@ -128,6 +128,8 @@ export interface IMutation {
 export interface Post {
     description: string;
     id: string;
+    image?: Nullable<ByteArray>;
+    investments?: Nullable<Nullable<Investment>[]>;
     likes: number;
     title: string;
 }
@@ -160,6 +162,7 @@ export interface User {
     username: string;
 }
 
+export type ByteArray = any;
 export type DateTime = any;
 export type Json = any;
 type Nullable<T> = T | null;
