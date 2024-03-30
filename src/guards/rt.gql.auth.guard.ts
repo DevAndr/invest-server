@@ -17,7 +17,7 @@ export class RtGqlAuthGuard extends AuthGuard('jwt-refresh') {
     const {username, password} = ctx.getArgs();
     const req = ctx.getContext().req;
     // request.body = {username, password}
-    console.log("request: ", username, password, req);
+    console.log("request: ", username, password);
     return req;
   }
 }

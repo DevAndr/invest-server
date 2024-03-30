@@ -18,8 +18,10 @@ export class AtGqlAuthGuard extends AuthGuard('jwt') {
       return request;
     } else {
       const ctxGql = GqlExecutionContext.create(ctx);
-      console.log(ctxGql.getContext().req);
-      return ctxGql.getContext().req;
+      const req = ctxGql.getContext().req
+      console.log(req);
+      console.log('cookies', req.cookies)
+      return req;
     }
   }
 
