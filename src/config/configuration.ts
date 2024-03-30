@@ -3,7 +3,7 @@ import * as yaml from 'js-yaml';
 import { join } from 'path';
 
 const YAML_CONFIG_FILENAME = '../../config.yaml';
-
+export const whiteList = ['http://localhost:3000'];
 export default () => {
   const yamlConfig = readFileSync(
     join(__dirname, YAML_CONFIG_FILENAME),
