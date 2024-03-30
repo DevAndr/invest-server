@@ -6,7 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { GraphQLDateTime, GraphQLJSON } from 'graphql-scalars';
 import { join } from 'path';
-import configuration from './config/configuration';
+import configuration, { whiteList } from './config/configuration';
 import { AtGqlAuthGuard } from './guards';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
@@ -15,6 +15,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { InvestmentModule } from './investment/investment.module';
+import { PubSub } from 'graphql-subscriptions';
+import { GraphQLError, GraphQLFormattedError } from 'graphql/error';
 
 @Module({
   imports: [
@@ -34,6 +36,10 @@ import { InvestmentModule } from './investment/investment.module';
         },
         plugins: [ApolloServerPluginLandingPageLocalDefault()],
         context: ({ req, res, extra }: GqlContext) => ({ req, res }),
+        cors: {
+          origin: whiteList,
+          credentials: true,
+        },
         resolvers: { DateTime: GraphQLDateTime },
       }),
     }),
@@ -47,6 +53,10 @@ import { InvestmentModule } from './investment/investment.module';
     {
       provide: APP_GUARD,
       useClass: AtGqlAuthGuard,
+    },
+    {
+      provide: 'PUB_SUB',
+      useValue: new PubSub(),
     },
     UserModule,
     AuthModule,

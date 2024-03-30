@@ -3,13 +3,16 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import { whiteList } from './config/configuration';
 
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.enableCors({
-    origin: '*',
+    origin: whiteList,
     credentials: true,
+    // exposedHeaders: ['set-cookie'],
   });
   app.useGlobalPipes(new ValidationPipe());
   const configService = app.get(ConfigService);
