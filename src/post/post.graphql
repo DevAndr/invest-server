@@ -1,6 +1,10 @@
+scalar ByteArray
+
 type Post {
   id: ID!
   title: String!
+  image : ByteArray
+  investments: [Investment]
   description: String!
   likes: Int!
 }

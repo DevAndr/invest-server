@@ -7,13 +7,13 @@ import { PostService } from './post.service';
 export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
-  @Public()
+  // @Public()
   @Mutation('createPost')
   async createPost(@Args('data') data: CreatePostInput) {
     return this.postService.create(data);
   }
 
-  @Public()
+  
   @Query('posts')
   async posts() {
     return this.postService.findAll();
