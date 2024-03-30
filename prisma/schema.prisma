@@ -8,31 +8,33 @@ datasource db {
 }
 
 model User {
-  id                 String         @id @unique @default(uuid())
-  email              String         @unique
-  status             String?
-  isOnline           Boolean        @default(false)
-  isConfirm          Boolean        @default(false)
-  isVerified         Boolean        @default(false)
-  hashedPassword     String
-  hashedRefreshToken String?
-  role               Role[]         @default([USER])
-  username           String         @unique
-  createAt           DateTime       @default(now())
-  updateAt           DateTime       @updatedAt
-  auth               Auth?
-  Comment            Comment[]
-  Investment         Investment?
-  Notification       Notification[]
-  profile            Profile?
+  id           String         @id @unique @default(uuid())
+  email        String         @unique
+  status       String?
+  isOnline     Boolean        @default(false)
+  isConfirm    Boolean        @default(false)
+  isVerified   Boolean        @default(false)
+  // hashedPassword     String
+  // hashedRefreshToken String?
+  role         Role[]         @default([USER])
+  username     String         @unique
+  createAt     DateTime       @default(now())
+  updateAt     DateTime       @updatedAt
+  auth         Auth?
+  Comment      Comment[]
+  Investment   Investment?
+  Notification Notification[]
+  profile      Profile?
 }
 
 model Auth {
-  id           String @id @default(uuid())
-  userId       String @unique
-  accessToken  String
-  refreshToken String
-  user         User   @relation(fields: [userId], references: [id])
+  id                 String  @id @default(uuid())
+  userId             String  @unique
+  accessToken        String
+  refreshToken       String
+  hashedPassword     String
+  hashedRefreshToken String?
+  user               User    @relation(fields: [userId], references: [id])
 }
 
 model Profile {
@@ -54,6 +56,8 @@ model Investment {
   createAt    DateTime       @default(now())
   comments    Comment[]
   user        User           @relation(fields: [userId], references: [id])
+  Post        Post?          @relation(fields: [postId], references: [id])
+  postId      String?
 }
 
 model Comment {
@@ -76,10 +80,12 @@ model Notification {
 }
 
 model Post {
-  id          String    @id @default(uuid())
+  id          String       @id @default(uuid())
   title       String
+  image       Bytes?       @db.ByteA
   description String
-  likes       Int       @default(0)
+  likes       Int          @default(0)
+  investments Investment[]
   comments    Comment[]
 }
 

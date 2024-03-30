@@ -15,8 +15,6 @@ CREATE TABLE "User" (
     "isOnline" BOOLEAN NOT NULL DEFAULT false,
     "isConfirm" BOOLEAN NOT NULL DEFAULT false,
     "isVerified" BOOLEAN NOT NULL DEFAULT false,
-    "hashedPassword" TEXT NOT NULL,
-    "hashedRefreshToken" TEXT,
     "role" "Role"[] DEFAULT ARRAY['USER']::"Role"[],
     "username" TEXT NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -31,6 +29,8 @@ CREATE TABLE "Auth" (
     "userId" TEXT NOT NULL,
     "accessToken" TEXT NOT NULL,
     "refreshToken" TEXT NOT NULL,
+    "hashedPassword" TEXT NOT NULL,
+    "hashedRefreshToken" TEXT,
 
     CONSTRAINT "Auth_pkey" PRIMARY KEY ("id")
 );
@@ -63,8 +63,9 @@ CREATE TABLE "Investment" (
 CREATE TABLE "Comment" (
     "id" TEXT NOT NULL,
     "text" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" TEXT,
     "investmentId" TEXT,
+    "postId" TEXT,
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
 );
@@ -77,6 +78,16 @@ CREATE TABLE "Notification" (
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Post" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "likes" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -110,7 +121,10 @@ ALTER TABLE "Investment" ADD CONSTRAINT "Investment_userId_fkey" FOREIGN KEY ("u
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "Investment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
