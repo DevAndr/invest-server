@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:gen": "prisma generate --watch",
     "gen-types": "ts-node src/generate-types.ts",
+    "prisma:studio": "npx prisma studio",
     "dev": "concurrently \"yarn:start:dev\" \"yarn:gen-types\" \"yarn:prisma:gen\""
   },
   "dependencies": {

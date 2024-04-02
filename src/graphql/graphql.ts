@@ -54,6 +54,16 @@ export interface CreateUserInput {
     username: string;
 }
 
+export interface DeletePostInput {
+    id: string;
+    uid: string;
+}
+
+export interface LikePostInput {
+    id: string;
+    isLiked?: Nullable<boolean>;
+}
+
 export interface LogInInput {
     password: string;
     username: string;
@@ -113,7 +123,14 @@ export interface IMutation {
     addCommentToInvest(data?: Nullable<CreateCommentInput>): Investment | Promise<Investment>;
     createInvest(data?: Nullable<CreateInvestmentInput>, userId?: Nullable<string>): Investment | Promise<Investment>;
     createPost(data?: Nullable<CreatePostInput>): Post | Promise<Post>;
+    createTag(value: string): Tag | Promise<Tag>;
     createUser(createUserInput: CreateUserInput): Nullable<User> | Promise<Nullable<User>>;
+    deletePost(id: string): Post | Promise<Post>;
+    deleteTag(id: string): boolean | Promise<boolean>;
+    findOrCreateTag(value: string): Nullable<Tag> | Promise<Nullable<Tag>>;
+    findPartialTags(value: string): Nullable<Nullable<Tag>[]> | Promise<Nullable<Nullable<Tag>[]>>;
+    findPostByTitle(value: string): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
+    likePost(data: LikePostInput): Post | Promise<Post>;
     refreshTokens(): Tokens | Promise<Tokens>;
     removeUser(id: string): Nullable<User> | Promise<Nullable<User>>;
     sigIn(data: LogInInput): Auth | Promise<Auth>;
@@ -135,15 +152,24 @@ export interface Post {
 }
 
 export interface IQuery {
+    allTags(): Nullable<Nullable<Tag>[]> | Promise<Nullable<Nullable<Tag>[]>>;
     checkAuth(): Nullable<boolean> | Promise<Nullable<boolean>>;
+    commentedPosts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
     getCommentsByInvest(investID?: Nullable<string>): Nullable<Comment[]> | Promise<Nullable<Comment[]>>;
     getInvest(investID: string): Investment | Promise<Investment>;
     getInvests(userID: string): Nullable<Investment[]> | Promise<Nullable<Investment[]>>;
+    likedPosts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
     logOut(): Nullable<boolean> | Promise<Nullable<boolean>>;
     posts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
+    tag(id: string): Tag | Promise<Tag>;
     test(a?: Nullable<string>, b?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     user(id: string): Nullable<User> | Promise<Nullable<User>>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
+}
+
+export interface Tag {
+    id: string;
+    value: string;
 }
 
 export interface Tokens {

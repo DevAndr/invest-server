@@ -18,6 +18,7 @@ import { InvestmentModule } from './investment/investment.module';
 import { PubSub } from 'graphql-subscriptions';
 import { GraphQLError, GraphQLFormattedError } from 'graphql/error';
 import { AtCookieAuthGuard } from './guards/at.cookie.guard';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AtCookieAuthGuard } from './guards/at.cookie.guard';
     UserModule,
     PostModule,
     InvestmentModule,
+    TagModule,
   ],
   providers: [
     {
