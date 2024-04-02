@@ -14,10 +14,26 @@ input CreatePostInput {
   description: String!
 }
 
+input DeletePostInput {
+  id: String!
+  uid: String!
+}
+
+input LikePostInput {
+  id: String!
+  isLiked: Boolean
+}
+
 type Query {
   posts: [Post]
+  likedPosts: [Post]
+  commentedPosts: [Post]
 }
 
 type Mutation {
+  findPostByTitle(value: String!): [Post]
   createPost(data: CreatePostInput): Post!
+  likePost(data: LikePostInput!): Post! 
+
+  deletePost(id: String!,): Post!
 }
