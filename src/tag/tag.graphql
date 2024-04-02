@@ -1,0 +1,16 @@
+type Tag {
+    id: ID!
+    value: String!
+}
+
+type Query {
+    tag(id: String!): Tag!
+    allTags: [Tag]
+}
+
+type Mutation {
+    findOrCreateTag(value: String!): Tag
+    findPartialTags(value: String!): [Tag]
+    createTag(value: String!): Tag!
+    deleteTag(id: String!): Boolean!
+}
