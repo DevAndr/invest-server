@@ -10,7 +10,7 @@ export class UserService {
 
   async create(data: Omit<CreateUserInput, 'password'>) {
     return this.prismaService.user.create({
-      data: { ...data },
+      data: { ...data, profile: { create: {age: 0} } },
     });
   }
 
