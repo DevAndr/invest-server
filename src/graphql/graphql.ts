@@ -8,6 +8,21 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum CryptoStrategy {
+    FUTURE = "FUTURE",
+    GRID_FIAT = "GRID_FIAT",
+    GRID_SPOT = "GRID_SPOT",
+    LONG_INVEST = "LONG_INVEST",
+    P2P = "P2P",
+    SPOT = "SPOT"
+}
+
+export enum InvestmentStatus {
+    CANCELLED = "CANCELLED",
+    COMPLETED = "COMPLETED",
+    OPEN = "OPEN"
+}
+
 export enum InvestmentType {
     BONDS = "BONDS",
     CRYPTO = "CRYPTO",
@@ -31,6 +46,14 @@ export enum TypeCurrency {
 export interface CreateCommentInput {
     investmentId: string;
     text: string;
+}
+
+export interface CreateCryptoInvestment {
+    amountInvest: number;
+    goal: number;
+    orderDate: DateTime;
+    strategy?: Nullable<Nullable<CryptoStrategy>[]>;
+    symbol: string;
 }
 
 export interface CreateInvestmentInput {
@@ -75,6 +98,14 @@ export interface SigInInput {
     username: string;
 }
 
+export interface UpdateCryptoInvestment {
+    amountInvest?: Nullable<number>;
+    currentAmount?: Nullable<number>;
+    goal?: Nullable<number>;
+    strategy?: Nullable<Nullable<CryptoStrategy>[]>;
+    symbol?: Nullable<string>;
+}
+
 export interface UpdateDataUserInput {
     email?: Nullable<string>;
     status?: Nullable<string>;
@@ -90,10 +121,27 @@ export interface UpdateInvestmentInput {
     price?: Nullable<number>;
 }
 
+export interface AnalyzeCryptoInvestment {
+    dayToGoal?: Nullable<number>;
+    exitInZeroDays?: Nullable<number>;
+    forecastToGoal?: Nullable<string>;
+    investment?: Nullable<CryptoInvestment>;
+    percentProfit?: Nullable<number>;
+    profitOfDay?: Nullable<number>;
+    reviewGoal?: Nullable<number>;
+    timeToInvest?: Nullable<DateTime>;
+}
+
 export interface Auth {
     accessToken?: Nullable<string>;
     refreshToken?: Nullable<string>;
     user?: Nullable<User>;
+}
+
+export interface Coin {
+    id?: Nullable<string>;
+    orderCoin?: Nullable<CryptoInvestment>;
+    symbol?: Nullable<string>;
 }
 
 export interface Comment {
@@ -103,6 +151,20 @@ export interface Comment {
     investmentId?: Nullable<string>;
     text?: Nullable<string>;
     userId?: Nullable<string>;
+}
+
+export interface CryptoInvestment {
+    amountInvest?: Nullable<number>;
+    coin?: Nullable<Coin>;
+    createAt?: Nullable<DateTime>;
+    currentAmount?: Nullable<number>;
+    goal?: Nullable<number>;
+    id?: Nullable<string>;
+    orderDate?: Nullable<DateTime>;
+    profit?: Nullable<number>;
+    status?: Nullable<InvestmentStatus>;
+    strategy?: Nullable<Nullable<CryptoStrategy>[]>;
+    updateAt?: Nullable<DateTime>;
 }
 
 export interface Investment {
@@ -120,11 +182,16 @@ export interface Investment {
 }
 
 export interface IMutation {
+    addCoin(symbol?: Nullable<string>): Coin | Promise<Coin>;
     addCommentToInvest(data?: Nullable<CreateCommentInput>): Investment | Promise<Investment>;
+    analyzeCryptoInvestment(idOrder: string): AnalyzeCryptoInvestment | Promise<AnalyzeCryptoInvestment>;
+    closeCryptoInvestment(idOrder: string, status: InvestmentStatus): CryptoInvestment | Promise<CryptoInvestment>;
+    createCryptoInvestment(data: CreateCryptoInvestment): CryptoInvestment | Promise<CryptoInvestment>;
     createInvest(data?: Nullable<CreateInvestmentInput>, userId?: Nullable<string>): Investment | Promise<Investment>;
     createPost(data?: Nullable<CreatePostInput>): Post | Promise<Post>;
     createTag(value: string): Tag | Promise<Tag>;
     createUser(createUserInput: CreateUserInput): Nullable<User> | Promise<Nullable<User>>;
+    deleteCryptoInvestment(idOrder: string): CryptoInvestment | Promise<CryptoInvestment>;
     deletePost(id: string): Post | Promise<Post>;
     deleteTag(id: string): boolean | Promise<boolean>;
     findOrCreateTag(value: string): Nullable<Tag> | Promise<Nullable<Tag>>;
@@ -136,6 +203,7 @@ export interface IMutation {
     sigIn(data: LogInInput): Auth | Promise<Auth>;
     sigUp(data: SigInInput): Auth | Promise<Auth>;
     update(data?: Nullable<UpdateDataUserInput>): Nullable<User> | Promise<Nullable<User>>;
+    updateCryptoInvestment(data: UpdateCryptoInvestment, idOrder: string): CryptoInvestment | Promise<CryptoInvestment>;
     updateEmailUser(email: string): Nullable<User> | Promise<Nullable<User>>;
     updateInvest(data?: Nullable<UpdateInvestmentInput>): Investment | Promise<Investment>;
     updateStatusUser(status: string): Nullable<User> | Promise<Nullable<User>>;
@@ -155,14 +223,19 @@ export interface IQuery {
     allTags(): Nullable<Nullable<Tag>[]> | Promise<Nullable<Nullable<Tag>[]>>;
     checkAuth(): Nullable<boolean> | Promise<Nullable<boolean>>;
     commentedPosts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
+    getAllCryptoInvestments(): Nullable<Nullable<CryptoInvestment>[]> | Promise<Nullable<Nullable<CryptoInvestment>[]>>;
+    getAnalyzeAllCryptoInvestments(): Nullable<Nullable<CryptoInvestment>[]> | Promise<Nullable<Nullable<CryptoInvestment>[]>>;
     getCommentsByInvest(investID?: Nullable<string>): Nullable<Comment[]> | Promise<Nullable<Comment[]>>;
     getInvest(investID: string): Investment | Promise<Investment>;
     getInvests(userID: string): Nullable<Investment[]> | Promise<Nullable<Investment[]>>;
+    getLossCryptoInvestments(): Nullable<Nullable<CryptoInvestment>[]> | Promise<Nullable<Nullable<CryptoInvestment>[]>>;
+    getProfitCryptoInvestments(): Nullable<Nullable<CryptoInvestment>[]> | Promise<Nullable<Nullable<CryptoInvestment>[]>>;
     likedPosts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
     logOut(): Nullable<boolean> | Promise<Nullable<boolean>>;
     posts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
     tag(id: string): Tag | Promise<Tag>;
     test(a?: Nullable<string>, b?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    testAnalyzeProfit(): Nullable<string> | Promise<Nullable<string>>;
     user(id: string): Nullable<User> | Promise<Nullable<User>>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 }

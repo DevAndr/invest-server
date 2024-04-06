@@ -19,6 +19,7 @@ import { PubSub } from 'graphql-subscriptions';
 import { GraphQLError, GraphQLFormattedError } from 'graphql/error';
 import { AtCookieAuthGuard } from './guards/at.cookie.guard';
 import { TagModule } from './tag/tag.module';
+import { CryptoInvestModule } from './crypto-invest/crypto-invest.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { TagModule } from './tag/tag.module';
     PostModule,
     InvestmentModule,
     TagModule,
+    CryptoInvestModule,
   ],
   providers: [
     {

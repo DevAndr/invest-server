@@ -7,6 +7,12 @@ CREATE TYPE "TypeCurrency" AS ENUM ('RUB', 'USD', 'EUR');
 -- CreateEnum
 CREATE TYPE "InvestmentType" AS ENUM ('INDEX', 'CRYPTO', 'DEPOSIT', 'BONDS', 'STOCK');
 
+-- CreateEnum
+CREATE TYPE "CryptoStrategy" AS ENUM ('LONG_INVEST', 'GRID_SPOT', 'GRID_FIAT', 'FUTURE', 'SPOT', 'P2P');
+
+-- CreateEnum
+CREATE TYPE "InvestmentStatus" AS ENUM ('COMPLETED', 'CANCELLED', 'OPEN');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -103,6 +109,31 @@ CREATE TABLE "Tag" (
 );
 
 -- CreateTable
+CREATE TABLE "Coin" (
+    "id" TEXT NOT NULL,
+    "symbol" TEXT NOT NULL,
+
+    CONSTRAINT "Coin_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CryptoInvestment" (
+    "id" TEXT NOT NULL,
+    "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updateAt" TIMESTAMP(3) NOT NULL,
+    "orderDate" TIMESTAMP(3) NOT NULL,
+    "amountInvest" DOUBLE PRECISION NOT NULL,
+    "coinId" TEXT NOT NULL,
+    "currentAmount" DOUBLE PRECISION NOT NULL,
+    "profit" DOUBLE PRECISION NOT NULL,
+    "goal" DOUBLE PRECISION NOT NULL,
+    "status" "InvestmentStatus" NOT NULL DEFAULT 'OPEN',
+    "strategy" "CryptoStrategy"[],
+
+    CONSTRAINT "CryptoInvestment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_PostToProfile" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -158,6 +189,9 @@ ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CryptoInvestment" ADD CONSTRAINT "CryptoInvestment_coinId_fkey" FOREIGN KEY ("coinId") REFERENCES "Coin"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_PostToProfile" ADD CONSTRAINT "_PostToProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;

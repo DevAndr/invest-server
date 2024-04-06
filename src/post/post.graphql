@@ -33,7 +33,6 @@ type Query {
 type Mutation {
   findPostByTitle(value: String!): [Post]
   createPost(data: CreatePostInput): Post!
-  likePost(data: LikePostInput!): Post! 
-
+  likePost(data: LikePostInput!): Post!
   deletePost(id: String!,): Post!
 }
