@@ -25,6 +25,7 @@ model User {
   Investment   Investment?
   Notification Notification[]
   profile      Profile?
+  post         Post[]
 }
 
 model Auth {
@@ -38,10 +39,12 @@ model Auth {
 }
 
 model Profile {
-  id     String @id @default(uuid())
-  userId String @unique
-  age    Int
-  user   User   @relation(fields: [userId], references: [id])
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  age        Int
+  user       User     @relation(fields: [userId], references: [id])
+  likedPosts Post[]
+  subsribes  String[]
 }
 
 model Investment {
@@ -67,7 +70,7 @@ model Comment {
   investmentId String?
   investment   Investment? @relation(fields: [investmentId], references: [id])
   author       User?       @relation(fields: [userId], references: [id])
-  Post         Post?       @relation(fields: [postId], references: [id])
+  post         Post?       @relation(fields: [postId], references: [id])
   postId       String?
 }
 
@@ -87,6 +90,14 @@ model Post {
   likes       Int          @default(0)
   investments Investment[]
   comments    Comment[]
+  profileUser Profile[]
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id])
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  value String
 }
 
 enum Role {
@@ -107,4 +118,53 @@ enum InvestmentType {
   DEPOSIT
   BONDS
   STOCK
+}
+
+model Coin {
+  id         String             @id @default(uuid())
+  symbol     String
+  investCoin CryptoInvestment[]
+}
+
+model CryptoInvestment {
+  id            String           @id @default(uuid())
+  createAt      DateTime         @default(now())
+  updateAt      DateTime         @updatedAt
+  orderDate     DateTime
+  amountInvest  Float
+  coinId        String
+  coin          Coin             @relation(fields: [coinId], references: [id])
+  currentAmount Float
+  profit        Float
+  goal          Float
+  status        InvestmentStatus @default(OPEN)
+  strategy      CryptoStrategy[]
+}
+
+enum CryptoStrategy {
+  LONG_INVEST
+  GRID_SPOT
+  GRID_FIAT
+  FUTURE
+  SPOT
+  P2P
+}
+
+enum InvestmentStatus {
+  COMPLETED
+  CANCELLED
+  OPEN
+}
+
+model Tokens {
+  id         String @id @default(uuid())
+  token      String
+  expireAt   DateTime
+  platform Platform
+}
+
+enum Platform {
+  BINANCE
+  BYBIT
+  TINKOFF
 }

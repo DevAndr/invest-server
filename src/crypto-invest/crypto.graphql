@@ -1,0 +1,81 @@
+scalar DateTime
+scalar Float
+
+enum CryptoStrategy {
+    LONG_INVEST
+    GRID_SPOT
+    GRID_FIAT
+    FUTURE
+    SPOT
+    P2P
+}
+
+enum InvestmentStatus {
+    COMPLETED
+    CANCELLED
+    OPEN
+}
+
+type CryptoInvestment {
+    id: ID
+    createAt: DateTime
+    updateAt: DateTime
+    orderDate: DateTime
+    amountInvest: Float
+    coin: Coin
+    currentAmount: Float
+    goal: Float
+    profit: Float
+    status: InvestmentStatus
+    strategy: [CryptoStrategy]
+}
+
+type AnalyzeCryptoInvestment {
+    investment: CryptoInvestment
+    percentProfit: Float
+    timeToInvest: DateTime
+    reviewGoal: Float
+    exitInZeroDays: Float
+    dayToGoal: Float
+    profitOfDay: Float
+    forecastToGoal: String #прогноз с датой если инвестиция в плюсе, если в минусе то выводить что-то типо убыточная инвестиция
+}
+
+type Coin {
+    id: ID
+    symbol: String
+    orderCoin: CryptoInvestment
+}
+
+input CreateCryptoInvestment {
+    orderDate: DateTime!
+    symbol: String!
+    amountInvest: Float!
+    goal: Float!
+    strategy: [CryptoStrategy]
+}
+
+input UpdateCryptoInvestment {
+    symbol: String
+    amountInvest: Float
+    currentAmount: Float
+    goal: Float
+    strategy: [CryptoStrategy]
+}
+
+type Query {
+    getAllCryptoInvestments: [CryptoInvestment]
+    getAnalyzeAllCryptoInvestments: [CryptoInvestment]
+    getProfitCryptoInvestments: [CryptoInvestment]
+    getLossCryptoInvestments: [CryptoInvestment]
+    testAnalyzeProfit: String
+}
+
+type Mutation {
+    addCoin(symbol: String): Coin!
+    createCryptoInvestment(data: CreateCryptoInvestment!): CryptoInvestment!
+    updateCryptoInvestment(data: UpdateCryptoInvestment!, idOrder: String!): CryptoInvestment!
+    deleteCryptoInvestment(idOrder: String!): CryptoInvestment!
+    analyzeCryptoInvestment(idOrder: String!): AnalyzeCryptoInvestment!
+    closeCryptoInvestment(idOrder: String!, status: InvestmentStatus!): CryptoInvestment!
+}
