@@ -1,6 +1,12 @@
 scalar DateTime
 scalar Float
 
+enum Platform {
+  BINANCE
+  BYBIT
+  TINKOFF
+}
+
 enum CryptoStrategy {
     LONG_INVEST
     GRID_SPOT
@@ -24,6 +30,7 @@ type CryptoInvestment {
     amountInvest: Float
     coin: Coin
     currentAmount: Float
+    platform      Platform
     goal: Float
     profit: Float
     status: InvestmentStatus
@@ -52,6 +59,7 @@ input CreateCryptoInvestment {
     symbol: String!
     amountInvest: Float!
     goal: Float!
+    platform: Platform!
     strategy: [CryptoStrategy]
 }
 

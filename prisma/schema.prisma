@@ -137,6 +137,7 @@ model CryptoInvestment {
   currentAmount Float
   profit        Float
   goal          Float
+  platform      Platform
   status        InvestmentStatus @default(OPEN)
   strategy      CryptoStrategy[]
 }
