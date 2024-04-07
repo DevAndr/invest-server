@@ -155,3 +155,16 @@ enum InvestmentStatus {
   CANCELLED
   OPEN
 }
+
+model Tokens {
+  id         String @id @default(uuid())
+  token      String
+  expireAt   DateTime
+  platform Platform
+}
+
+enum Platform {
+  BINANCE
+  BYBIT
+  TINKOFF
+}
