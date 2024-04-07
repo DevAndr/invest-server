@@ -13,6 +13,9 @@ CREATE TYPE "CryptoStrategy" AS ENUM ('LONG_INVEST', 'GRID_SPOT', 'GRID_FIAT', '
 -- CreateEnum
 CREATE TYPE "InvestmentStatus" AS ENUM ('COMPLETED', 'CANCELLED', 'OPEN');
 
+-- CreateEnum
+CREATE TYPE "Platform" AS ENUM ('BINANCE', 'BYBIT', 'TINKOFF');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -59,7 +62,7 @@ CREATE TABLE "Investment" (
     "price" DOUBLE PRECISION NOT NULL,
     "name" TEXT NOT NULL,
     "type" "InvestmentType" NOT NULL,
-    "currency" "TypeCurrency" NOT NULL,
+    "typeCurrency" "TypeCurrency" NOT NULL,
     "description" TEXT,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "postId" TEXT,
@@ -127,10 +130,22 @@ CREATE TABLE "CryptoInvestment" (
     "currentAmount" DOUBLE PRECISION NOT NULL,
     "profit" DOUBLE PRECISION NOT NULL,
     "goal" DOUBLE PRECISION NOT NULL,
+    "platform" "Platform" NOT NULL,
+    "typeCurrency" "TypeCurrency" NOT NULL,
     "status" "InvestmentStatus" NOT NULL DEFAULT 'OPEN',
     "strategy" "CryptoStrategy"[],
 
     CONSTRAINT "CryptoInvestment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Tokens" (
+    "id" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "expireAt" TIMESTAMP(3) NOT NULL,
+    "platform" "Platform" NOT NULL,
+
+    CONSTRAINT "Tokens_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable

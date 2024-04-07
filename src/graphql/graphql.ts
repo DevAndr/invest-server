@@ -31,6 +31,12 @@ export enum InvestmentType {
     STOCK = "STOCK"
 }
 
+export enum Platform {
+    BINANCE = "BINANCE",
+    BYBIT = "BYBIT",
+    TINKOFF = "TINKOFF"
+}
+
 export enum Role {
     ADMIN = "ADMIN",
     BOT = "BOT",
@@ -48,21 +54,23 @@ export interface CreateCommentInput {
     text: string;
 }
 
-export interface CreateCryptoInvestment {
+export interface CreateCryptoInvestInput {
     amountInvest: number;
     goal: number;
-    orderDate: DateTime;
+    orderDate: string;
+    platform: Platform;
     strategy?: Nullable<Nullable<CryptoStrategy>[]>;
     symbol: string;
+    typeCurrency: TypeCurrency;
 }
 
 export interface CreateInvestmentInput {
     amount: number;
-    currency: TypeCurrency;
     description?: Nullable<string>;
     name: string;
     price: number;
     type: InvestmentType;
+    typeCurrency: TypeCurrency;
 }
 
 export interface CreatePostInput {
@@ -98,12 +106,13 @@ export interface SigInInput {
     username: string;
 }
 
-export interface UpdateCryptoInvestment {
+export interface UpdateCryptoInvestInput {
     amountInvest?: Nullable<number>;
     currentAmount?: Nullable<number>;
     goal?: Nullable<number>;
     strategy?: Nullable<Nullable<CryptoStrategy>[]>;
     symbol?: Nullable<string>;
+    typeCurrency?: Nullable<TypeCurrency>;
 }
 
 export interface UpdateDataUserInput {
@@ -114,11 +123,11 @@ export interface UpdateDataUserInput {
 
 export interface UpdateInvestmentInput {
     amount?: Nullable<number>;
-    currency?: Nullable<TypeCurrency>;
     description?: Nullable<string>;
     id: string;
     name?: Nullable<string>;
     price?: Nullable<number>;
+    typeCurrency?: Nullable<TypeCurrency>;
 }
 
 export interface AnalyzeCryptoInvestment {
@@ -140,7 +149,7 @@ export interface Auth {
 
 export interface Coin {
     id?: Nullable<string>;
-    orderCoin?: Nullable<CryptoInvestment>;
+    investCoin?: Nullable<Nullable<CryptoInvestment>[]>;
     symbol?: Nullable<string>;
 }
 
@@ -161,6 +170,7 @@ export interface CryptoInvestment {
     goal?: Nullable<number>;
     id?: Nullable<string>;
     orderDate?: Nullable<DateTime>;
+    platform?: Nullable<Platform>;
     profit?: Nullable<number>;
     status?: Nullable<InvestmentStatus>;
     strategy?: Nullable<Nullable<CryptoStrategy>[]>;
@@ -171,12 +181,12 @@ export interface Investment {
     amount?: Nullable<number>;
     comments?: Nullable<Nullable<Comment>[]>;
     createAt?: Nullable<DateTime>;
-    currency?: Nullable<TypeCurrency>;
     description?: Nullable<string>;
     id?: Nullable<string>;
     name?: Nullable<string>;
     price?: Nullable<number>;
     type?: Nullable<InvestmentType>;
+    typeCurrency?: Nullable<TypeCurrency>;
     user?: Nullable<User>;
     userId?: Nullable<string>;
 }
@@ -184,14 +194,14 @@ export interface Investment {
 export interface IMutation {
     addCoin(symbol?: Nullable<string>): Coin | Promise<Coin>;
     addCommentToInvest(data?: Nullable<CreateCommentInput>): Investment | Promise<Investment>;
-    analyzeCryptoInvestment(idOrder: string): AnalyzeCryptoInvestment | Promise<AnalyzeCryptoInvestment>;
-    closeCryptoInvestment(idOrder: string, status: InvestmentStatus): CryptoInvestment | Promise<CryptoInvestment>;
-    createCryptoInvestment(data: CreateCryptoInvestment): CryptoInvestment | Promise<CryptoInvestment>;
+    analyzeCryptoInvestment(idInvest: string): AnalyzeCryptoInvestment | Promise<AnalyzeCryptoInvestment>;
+    closeCryptoInvestment(idInvest: string, status: InvestmentStatus): CryptoInvestment | Promise<CryptoInvestment>;
+    createCryptoInvestment(data: CreateCryptoInvestInput): CryptoInvestment | Promise<CryptoInvestment>;
     createInvest(data?: Nullable<CreateInvestmentInput>, userId?: Nullable<string>): Investment | Promise<Investment>;
     createPost(data?: Nullable<CreatePostInput>): Post | Promise<Post>;
     createTag(value: string): Tag | Promise<Tag>;
     createUser(createUserInput: CreateUserInput): Nullable<User> | Promise<Nullable<User>>;
-    deleteCryptoInvestment(idOrder: string): CryptoInvestment | Promise<CryptoInvestment>;
+    deleteCryptoInvestment(idInvest: string): CryptoInvestment | Promise<CryptoInvestment>;
     deletePost(id: string): Post | Promise<Post>;
     deleteTag(id: string): boolean | Promise<boolean>;
     findOrCreateTag(value: string): Nullable<Tag> | Promise<Nullable<Tag>>;
@@ -203,7 +213,7 @@ export interface IMutation {
     sigIn(data: LogInInput): Auth | Promise<Auth>;
     sigUp(data: SigInInput): Auth | Promise<Auth>;
     update(data?: Nullable<UpdateDataUserInput>): Nullable<User> | Promise<Nullable<User>>;
-    updateCryptoInvestment(data: UpdateCryptoInvestment, idOrder: string): CryptoInvestment | Promise<CryptoInvestment>;
+    updateCryptoInvestment(data: UpdateCryptoInvestInput, idInvest: string): CryptoInvestment | Promise<CryptoInvestment>;
     updateEmailUser(email: string): Nullable<User> | Promise<Nullable<User>>;
     updateInvest(data?: Nullable<UpdateInvestmentInput>): Investment | Promise<Investment>;
     updateStatusUser(status: string): Nullable<User> | Promise<Nullable<User>>;
@@ -235,7 +245,6 @@ export interface IQuery {
     posts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
     tag(id: string): Tag | Promise<Tag>;
     test(a?: Nullable<string>, b?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
-    testAnalyzeProfit(): Nullable<string> | Promise<Nullable<string>>;
     user(id: string): Nullable<User> | Promise<Nullable<User>>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 }

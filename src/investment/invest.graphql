@@ -20,7 +20,7 @@ input CreateInvestmentInput {
     amount: Float!
     price: Float!
     type: InvestmentType!
-    currency:  TypeCurrency!
+    typeCurrency:  TypeCurrency!
     description: String
 }
 
@@ -34,7 +34,7 @@ input UpdateInvestmentInput {
     name: String
     amount: Float
     price: Float
-    currency:  TypeCurrency
+    typeCurrency:  TypeCurrency
     description: String
 }
 
@@ -54,7 +54,7 @@ type Investment {
     price: Float
     name:  String
     type: InvestmentType
-    currency:TypeCurrency
+    typeCurrency:TypeCurrency
     description: String
     createAt :   DateTime
     comments: [Comment]

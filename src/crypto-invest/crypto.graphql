@@ -2,9 +2,9 @@ scalar DateTime
 scalar Float
 
 enum Platform {
-  BINANCE
-  BYBIT
-  TINKOFF
+    BINANCE
+    BYBIT
+    TINKOFF
 }
 
 enum CryptoStrategy {
@@ -30,7 +30,7 @@ type CryptoInvestment {
     amountInvest: Float
     coin: Coin
     currentAmount: Float
-    platform      Platform
+    platform: Platform
     goal: Float
     profit: Float
     status: InvestmentStatus
@@ -51,23 +51,25 @@ type AnalyzeCryptoInvestment {
 type Coin {
     id: ID
     symbol: String
-    orderCoin: CryptoInvestment
+    investCoin: [CryptoInvestment]
 }
 
-input CreateCryptoInvestment {
-    orderDate: DateTime!
+input CreateCryptoInvestInput {
+    orderDate: String!
     symbol: String!
     amountInvest: Float!
     goal: Float!
     platform: Platform!
+    typeCurrency:  TypeCurrency!
     strategy: [CryptoStrategy]
 }
 
-input UpdateCryptoInvestment {
+input UpdateCryptoInvestInput {
     symbol: String
     amountInvest: Float
     currentAmount: Float
     goal: Float
+    typeCurrency:  TypeCurrency
     strategy: [CryptoStrategy]
 }
 
@@ -75,15 +77,14 @@ type Query {
     getAllCryptoInvestments: [CryptoInvestment]
     getAnalyzeAllCryptoInvestments: [CryptoInvestment]
     getProfitCryptoInvestments: [CryptoInvestment]
-    getLossCryptoInvestments: [CryptoInvestment]
-    testAnalyzeProfit: String
+    getLossCryptoInvestments: [CryptoInvestment] 
 }
 
 type Mutation {
     addCoin(symbol: String): Coin!
-    createCryptoInvestment(data: CreateCryptoInvestment!): CryptoInvestment!
-    updateCryptoInvestment(data: UpdateCryptoInvestment!, idOrder: String!): CryptoInvestment!
-    deleteCryptoInvestment(idOrder: String!): CryptoInvestment!
-    analyzeCryptoInvestment(idOrder: String!): AnalyzeCryptoInvestment!
-    closeCryptoInvestment(idOrder: String!, status: InvestmentStatus!): CryptoInvestment!
+    createCryptoInvestment(data: CreateCryptoInvestInput!): CryptoInvestment!
+    updateCryptoInvestment(data: UpdateCryptoInvestInput!, idInvest: String!): CryptoInvestment!
+    deleteCryptoInvestment(idInvest: String!): CryptoInvestment!
+    analyzeCryptoInvestment(idInvest: String!): AnalyzeCryptoInvestment!
+    closeCryptoInvestment(idInvest: String!, status: InvestmentStatus!): CryptoInvestment!
 }
